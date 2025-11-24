@@ -6,11 +6,15 @@
   import TodoListFooter from './TodoListFooter.vue';
   import Todo from './Todo.vue';
 
+  const props = defineProps({
+    apiURL : {type: String, required: true}
+  });
+
 
   const todos = reactive([]);
 
   onMounted(async () => {
-    DB.setApiURL("https://691b2f262d8d78557571e7d5.mockapi.io/")
+    DB.setApiURL(props.apiURL)
     todos.splice(todos.length, 0, ...(await DB.findAll())) ;
   });
 
