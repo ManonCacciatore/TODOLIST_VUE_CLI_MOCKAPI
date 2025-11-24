@@ -18,6 +18,13 @@
     todos.splice(todos.length, 0, ...(await DB.findAll())) ;
   });
 
+  // FONCTIONS CRUD
+
+  const createItem = async (content) => {
+   const todo = await DB.create(content);
+   todos.push(todo);
+  }
+
 
 </script>
 <template>
@@ -26,7 +33,7 @@
       aria-labelledby="todo-heading">
       <h2 id="todo-heading" class="sr-only">Todo list</h2>
 
-      <TodoListAddForm />
+      <TodoListAddForm @on-submit-add-form="createItem($event)" />
 
 
       <!-- LISTE DES TODOS -->
