@@ -25,6 +25,11 @@
    todos.push(todo);
   }
 
+  const deleteOneById = async (id) => {
+    await DB.deleteOneById(id)
+    todos.splice(todos.findIndex((todo) => todo.id === id), 1)
+  }
+
 
 </script>
 <template>
@@ -39,7 +44,7 @@
       <!-- LISTE DES TODOS -->
       <ul class="m-4 divide-y divide-slate-200" role="list" aria-label="Todos">
         <!-- ITEM (exemple) -->
-        <todo v-for="todo in todos" :key="todo.id" :todo="todo"/>
+        <todo v-for="todo in todos" :key="todo.id" :todo="todo" @on-delete="deleteOneById($event)"/>
       </ul>
 
       <!-- FOOTER DE LISTE -->

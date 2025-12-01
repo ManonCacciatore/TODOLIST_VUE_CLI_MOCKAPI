@@ -3,6 +3,13 @@
 const props = defineProps({
     todo: { type: Object, required: true},
 });
+
+const emits = defineEmits(["onDelete"]);
+
+const onDelete = () => {
+  emits("onDelete", props.todo.id);
+}
+
 </script>
 <template>
             <li class="px-4 py-3 sm:px-5" role="listitem">
@@ -15,7 +22,7 @@ const props = defineProps({
             </label>
             <button
               class="text-red-600/90 hover:text-red-700 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded"
-              aria-label="Delete task" title="Delete">
+              aria-label="Delete task" title="Delete" @click="onDelete">
               ✕
             </button>
           </div>
