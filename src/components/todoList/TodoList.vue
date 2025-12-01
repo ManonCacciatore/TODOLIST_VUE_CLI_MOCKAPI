@@ -1,7 +1,7 @@
 <script setup>
 
-  import { reactive , onMounted } from "vue";
-  import DB from "@/services/DB";
+  import { onMounted } from "vue";
+  import { todosStore } from "@/stores/todos";
   import TodoListAddForm from './TodoListAddForm.vue';
   import TodoListFooter from './TodoListFooter.vue';
   import Todo from './Todo.vue';
@@ -10,25 +10,10 @@
     apiURL : {type: String, required: true}
   });
 
-
-  const todos = reactive([]);
-
+  
   onMounted(async () => {
-    DB.setApiURL(props.apiURL)
-    todos.splice(todos.length, 0, ...(await DB.findAll())) ;
+    todosStore.init(props.apiURL);
   });
-
-  // FONCTIONS CRUD
-
-  const createItem = async (content) => {
-   const todo = await DB.create(content);
-   todos.push(todo);
-  }
-
-  const deleteOneById = async (id) => {
-    await DB.deleteOneById(id)
-    todos.splice(todos.findIndex((todo) => todo.id === id), 1)
-  }
 
 
 </script>
@@ -38,17 +23,17 @@
       aria-labelledby="todo-heading">
       <h2 id="todo-heading" class="sr-only">Todo list</h2>
 
-      <TodoListAddForm @on-submit-add-form="createItem($event)" />
+      <TodoListAddForm @on-submit-add-form="todosStore.createItem($event)" />
 
 
       <!-- LISTE DES TODOS -->
       <ul class="m-4 divide-y divide-slate-200" role="list" aria-label="Todos">
         <!-- ITEM (exemple) -->
-        <todo v-for="todo in todos" :key="todo.id" :todo="todo" @on-delete="deleteOneById($event)"/>
+        <todo v-for="todo in todosStore.todos" :key="todo.id" :todo="todo" @on-delete="useTodos.deleteOneById($event)"/>
       </ul>
 
       <!-- FOOTER DE LISTE -->
-       <TodoListFooter />
+       <TodoListFooter :notCompletedCount="todosStore.notCompletedCount" />
 
     </section>
 </template>
